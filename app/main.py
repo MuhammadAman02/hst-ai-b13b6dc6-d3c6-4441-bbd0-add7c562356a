@@ -1,143 +1,104 @@
 """
-Main Portfolio Application
-Creates the complete GenAI Engineer portfolio with all sections and demos.
+Main application module for the GenAI Portfolio.
+Creates and configures the NiceGUI application with FastAPI integration.
 """
 
-from nicegui import ui, app
+from nicegui import ui, app as nicegui_app
 from fastapi import FastAPI
-from app.core.config import settings
-from app.core.logging import app_logger
-from app.components.layout import create_layout
-from app.components.hero import create_hero_section
-from app.components.about import create_about_section
-from app.components.skills import create_skills_section
-from app.components.projects import create_projects_section
-from app.components.ai_demos import create_ai_demos_section
-from app.components.blog import create_blog_section
-from app.components.contact import create_contact_section
-from app.api.router import api_router
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+import asyncio
+from typing import Optional
 
-def create_portfolio_app() -> FastAPI:
-    """Create and configure the portfolio FastAPI application."""
+from app.core import app_logger, settings
+from app.api.router import api_router
+from app.ui.pages import create_portfolio_pages
+from app.ui.components import setup_theme
+
+def create_fastapi_app() -> FastAPI:
+    """Create and configure the FastAPI application."""
     
-    # Configure FastAPI app
-    fastapi_app = app.fastapi
-    fastapi_app.title = "GenAI Engineer Portfolio API"
-    fastapi_app.description = "Backend API for the GenAI Engineer Portfolio"
-    fastapi_app.version = "1.0.0"
+    # Create FastAPI app
+    fastapi_app = FastAPI(
+        title=settings.APP_NAME,
+        description=settings.APP_DESCRIPTION,
+        version=settings.APP_VERSION,
+        docs_url="/docs" if settings.DEBUG else None,
+        redoc_url="/redoc" if settings.DEBUG else None,
+    )
     
-    # Include API routes
-    fastapi_app.include_router(api_router, prefix="/api")
+    # Add CORS middleware
+    fastapi_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     
+    # Include API router
+    fastapi_app.include_router(api_router, prefix=settings.API_PREFIX)
+    
+    # Mount static files
+    static_path = Path("./static")
+    if static_path.exists():
+        fastapi_app.mount("/static", StaticFiles(directory=static_path), name="static")
+    
+    # Health check endpoint
+    @fastapi_app.get("/health")
+    async def health_check():
+        return {
+            "status": "healthy",
+            "app": settings.APP_NAME,
+            "version": settings.APP_VERSION
+        }
+    
+    app_logger.info("FastAPI application configured successfully")
     return fastapi_app
 
-@ui.page('/')
-def index():
-    """Main portfolio page with all sections."""
+def create_portfolio_app() -> FastAPI:
+    """Create the complete portfolio application with NiceGUI integration."""
     
-    with create_layout():
-        # Hero Section
-        create_hero_section()
+    try:
+        # Create FastAPI app
+        fastapi_app = create_fastapi_app()
         
-        # About Section
-        create_about_section()
+        # Configure NiceGUI to use our FastAPI app
+        nicegui_app.mount_to(fastapi_app)
         
-        # Skills Section
-        create_skills_section()
+        # Setup theme and styling
+        setup_theme()
         
-        # Projects Section
-        create_projects_section()
+        # Create portfolio pages
+        create_portfolio_pages()
         
-        # AI Demos Section
-        create_ai_demos_section()
+        app_logger.info("Portfolio application created successfully")
+        return fastapi_app
         
-        # Blog Section
-        create_blog_section()
-        
-        # Contact Section
-        create_contact_section()
+    except Exception as e:
+        app_logger.error(f"Failed to create portfolio application: {e}")
+        raise
 
-@ui.page('/project/{project_id}')
-def project_detail(project_id: str):
-    """Detailed project view."""
-    from app.components.project_detail import create_project_detail
-    
-    with create_layout():
-        create_project_detail(project_id)
+# Global app instance
+app: Optional[FastAPI] = None
 
-@ui.page('/blog/{post_id}')
-def blog_post(post_id: str):
-    """Individual blog post view."""
-    from app.components.blog_post import create_blog_post
-    
-    with create_layout():
-        create_blog_post(post_id)
+def get_app() -> FastAPI:
+    """Get or create the application instance."""
+    global app
+    if app is None:
+        app = create_portfolio_app()
+    return app
 
-# Add custom CSS for professional styling
-ui.add_head_html('''
-<style>
-    :root {
-        --primary-color: #2563eb;
-        --secondary-color: #1e40af;
-        --accent-color: #3b82f6;
-        --text-primary: #1f2937;
-        --text-secondary: #6b7280;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f8fafc;
-        --border-color: #e5e7eb;
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .hero-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .card-hover {
-        transition: all 0.3s ease;
-    }
-    
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
-    }
-    
-    .skill-bar {
-        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-        border-radius: 10px;
-        height: 8px;
-    }
-    
-    .ai-demo-card {
-        background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
-        border: 1px solid #0ea5e9;
-    }
-    
-    .typing-animation {
-        overflow: hidden;
-        border-right: 2px solid var(--primary-color);
-        white-space: nowrap;
-        animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-    }
-    
-    @keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
-    }
-    
-    @keyframes blink-caret {
-        from, to { border-color: transparent }
-        50% { border-color: var(--primary-color) }
-    }
-    
-    .floating-animation {
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0px); }
-    }
-</style>
-''')
+# Create the app when this module is imported
+if __name__ != "__main__":
+    try:
+        app = create_portfolio_app()
+    except Exception as e:
+        app_logger.error(f"Failed to initialize application: {e}")
+        # Create a minimal FastAPI app as fallback
+        app = FastAPI(title="Portfolio (Fallback Mode)")
+        
+        @app.get("/")
+        async def fallback_root():
+            return {"message": "Portfolio application is in fallback mode", "error": str(e)}
