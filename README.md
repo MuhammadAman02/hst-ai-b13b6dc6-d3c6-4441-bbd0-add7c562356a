@@ -1,65 +1,44 @@
 # GenAI Engineer Portfolio
 
-A professional portfolio website showcasing expertise in Generative AI, built with NiceGUI and FastAPI.
+A professional portfolio showcasing Generative AI expertise with interactive demos and project showcases. Built with NiceGUI and FastAPI for a modern, responsive experience.
 
 ## 🚀 Features
 
-### Professional Portfolio Sections
-- **Hero Section**: Eye-catching introduction with animated elements
-- **About**: Personal and professional background
-- **Skills**: Technical expertise with proficiency indicators
-- **Projects**: Detailed project showcases with live demos
-- **AI Demos**: Interactive AI demonstrations
-- **Blog**: Technical articles and insights
-- **Contact**: Professional contact form and information
-
-### Interactive AI Demonstrations
-- **Text Generation**: AI-powered content creation
-- **AI Chat**: Conversational AI assistant
-- **Text Analysis**: Sentiment and entity analysis
-- **Image Generation**: AI image creation (demo)
-
-### Technical Highlights
-- **Modern UI**: Responsive design with professional styling
-- **Fast Performance**: Built with FastAPI backend
-- **Type Safety**: Comprehensive type hints throughout
-- **API Integration**: RESTful API for dynamic content
-- **Production Ready**: Proper error handling and logging
+- **Interactive Portfolio**: Professional showcase of AI projects and skills
+- **Live AI Demos**: Experience text generation and chat capabilities
+- **Responsive Design**: Modern, mobile-friendly interface
+- **Contact Integration**: Professional contact form with email notifications
+- **API Backend**: RESTful API for dynamic content and integrations
+- **Production Ready**: Comprehensive logging, error handling, and security
 
 ## 🛠️ Technology Stack
 
-### Frontend
-- **NiceGUI**: Modern Python web framework
-- **Tailwind CSS**: Utility-first CSS framework
-- **Custom CSS**: Professional animations and styling
+- **Frontend**: NiceGUI (Python-based UI framework)
+- **Backend**: FastAPI (High-performance Python web framework)
+- **Database**: SQLAlchemy with SQLite (easily configurable for PostgreSQL)
+- **AI Integration**: OpenAI API, LangChain support
+- **Styling**: Tailwind CSS classes with custom themes
+- **Deployment**: Docker support with production configurations
 
-### Backend
-- **FastAPI**: High-performance API framework
-- **Pydantic**: Data validation and settings
-- **Python 3.9+**: Modern Python features
+## 📋 Prerequisites
 
-### AI Integration
-- **OpenAI API**: GPT models for text generation
-- **LangChain**: AI application framework
-- **Hugging Face**: Additional AI models
-
-## 📦 Installation
-
-### Prerequisites
 - Python 3.9 or higher
-- pip package manager
+- pip (Python package manager)
 - Virtual environment (recommended)
 
-### Quick Start
+## 🔧 Installation
 
-1. **Clone the repository**
+### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/genai-engineer/portfolio.git
 cd portfolio
 ```
 
-2. **Create virtual environment**
+### 2. Create Virtual Environment
+
 ```bash
+# Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
@@ -69,122 +48,49 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-3. **Install dependencies**
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configure environment**
+### 4. Environment Configuration
+
 ```bash
+# Copy environment template
 cp .env.example .env
-# Edit .env with your configuration
+
+# Edit .env file with your configuration
+# At minimum, update:
+# - SECRET_KEY (generate a secure random key)
+# - CONTACT_EMAIL (your email address)
+# - OPENAI_API_KEY (optional, for live AI demos)
 ```
 
-5. **Run the application**
+### 5. Create Required Directories
+
+```bash
+mkdir -p data logs uploads static/images static/css static/js
+```
+
+## 🚀 Running the Application
+
+### Development Mode
+
 ```bash
 python main.py
 ```
 
-6. **Open your browser**
-Navigate to `http://localhost:8080`
+The application will be available at `http://localhost:8080`
 
-## ⚙️ Configuration
+### Production Mode
 
-### Environment Variables
-
-Copy `.env.example` to `.env` and customize:
-
-```env
-# Application
-APP_NAME="Your Name - GenAI Engineer"
-ENGINEER_NAME="Your Name"
-ENGINEER_TITLE="Your Title"
-ENGINEER_LOCATION="Your Location"
-
-# Contact
-CONTACT_EMAIL=your.email@domain.com
-GITHUB_URL=https://github.com/yourusername
-LINKEDIN_URL=https://linkedin.com/in/yourusername
-
-# AI Services (Optional)
-OPENAI_API_KEY=your-openai-api-key
-```
-
-### Customization
-
-#### Personal Information
-Edit `app/core/config.py` to update:
-- Personal details
-- Social media links
-- Contact information
-- Professional background
-
-#### Projects
-Modify `app/components/projects.py` to showcase your projects:
-- Project descriptions
-- Technology stacks
-- Demo links
-- GitHub repositories
-
-#### Skills
-Update `app/components/skills.py` with your expertise:
-- Technical skills
-- Proficiency levels
-- Skill categories
-
-#### Blog Posts
-Add your articles in `app/components/blog.py`:
-- Technical insights
-- Project experiences
-- Industry thoughts
-
-## 🎨 Customization Guide
-
-### Styling
-- **Colors**: Modify CSS variables in `app/main.py`
-- **Fonts**: Update font families in the CSS section
-- **Layout**: Adjust component layouts in respective files
-
-### Content
-- **About Section**: Edit `app/components/about.py`
-- **Projects**: Update project data in `app/components/projects.py`
-- **Skills**: Modify skill categories in `app/components/skills.py`
-
-### AI Demos
-- **Enable Live Demos**: Add API keys to `.env`
-- **Custom Models**: Integrate your own AI models
-- **New Demos**: Add components in `app/components/ai_demos.py`
-
-## 🚀 Deployment
-
-### Local Development
 ```bash
-python main.py
-```
-
-### Production Deployment
-
-#### Using Docker
-```bash
-# Build image
-docker build -t genai-portfolio .
-
-# Run container
-docker run -p 8080:8080 genai-portfolio
-```
-
-#### Using Cloud Platforms
-- **Heroku**: Add `Procfile` with `web: python main.py`
-- **Railway**: Connect GitHub repository
-- **Vercel**: Use serverless deployment
-- **AWS/GCP**: Deploy with container services
-
-### Environment Setup
-```bash
-# Production environment
+# Set production environment
 export DEBUG=false
-export HOST=0.0.0.0
-export PORT=8080
+
+# Run with production settings
+python main.py
 ```
 
 ## 📁 Project Structure
@@ -193,72 +99,223 @@ export PORT=8080
 portfolio/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                 # Main application
-│   ├── core/                   # Core configuration
-│   │   ├── config.py          # Settings
-│   │   └── logging.py         # Logging setup
-│   ├── components/             # UI components
-│   │   ├── layout.py          # Main layout
-│   │   ├── hero.py            # Hero section
-│   │   ├── about.py           # About section
-│   │   ├── skills.py          # Skills section
-│   │   ├── projects.py        # Projects showcase
-│   │   ├── ai_demos.py        # AI demonstrations
-│   │   ├── blog.py            # Blog section
-│   │   ├── contact.py         # Contact form
-│   │   ├── project_detail.py  # Project details
-│   │   └── blog_post.py       # Blog post view
-│   └── api/                    # API endpoints
+│   ├── main.py                 # Application factory and configuration
+│   ├── api/                    # API endpoints and routing
+│   │   ├── __init__.py
+│   │   └── router.py          # API routes for contact, projects, etc.
+│   ├── core/                   # Core application components
+│   │   ├── __init__.py
+│   │   ├── config.py          # Settings and configuration
+│   │   └── logging.py         # Logging configuration
+│   ├── models/                 # Data models (future expansion)
+│   │   └── __init__.py
+│   ├── services/               # Business logic services
+│   │   └── __init__.py
+│   └── ui/                     # User interface components
 │       ├── __init__.py
-│       └── router.py          # API routes
+│       ├── components.py      # Reusable UI components
+│       └── pages.py           # Page definitions and routing
+├── data/                       # Database and data files
+├── logs/                       # Application logs
+├── static/                     # Static assets
+├── uploads/                    # File uploads
 ├── main.py                     # Application entry point
-├── requirements.txt            # Dependencies
-├── .env.example               # Environment template
-├── README.md                  # Documentation
-└── .gitignore                 # Git ignore rules
+├── requirements.txt            # Python dependencies
+├── .env.example               # Environment variables template
+├── .env                       # Environment variables (create from template)
+└── README.md                  # This file
 ```
 
-## 🔧 API Endpoints
+## 🔧 Configuration
 
-### Public Endpoints
-- `GET /api/health` - Health check
-- `GET /api/projects` - Get all projects
-- `GET /api/skills` - Get all skills
-- `POST /api/contact` - Submit contact form
+### Environment Variables
 
-### AI Demo Endpoints
-- `POST /api/ai/text-generation` - Generate text
-- `POST /api/ai/chat` - Chat with AI
-- `POST /api/ai/analyze` - Analyze text
+Key configuration options in `.env`:
+
+```bash
+# Application
+APP_NAME="GenAI Engineer Portfolio"
+DEBUG=false
+HOST=0.0.0.0
+PORT=8080
+
+# Security
+SECRET_KEY=your-secure-secret-key
+
+# AI Services (Optional)
+OPENAI_API_KEY=your-openai-api-key
+
+# Email (Optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+
+# Contact Information
+CONTACT_EMAIL=your-email@domain.com
+LINKEDIN_URL=https://linkedin.com/in/your-profile
+GITHUB_URL=https://github.com/your-username
+```
+
+### Customization
+
+1. **Personal Information**: Update contact details in `.env`
+2. **Projects**: Modify project data in `app/ui/pages.py`
+3. **Skills**: Update skills and proficiencies in `app/ui/pages.py`
+4. **Styling**: Customize themes in `app/ui/components.py`
+5. **Content**: Edit page content and descriptions throughout the UI files
+
+## 🎨 Customization Guide
+
+### Adding New Projects
+
+Edit `app/ui/pages.py` in the `create_projects_page()` function:
+
+```python
+projects = [
+    {
+        "title": "Your Project Name",
+        "description": "Project description",
+        "tech_stack": ["Technology", "Stack", "Used"],
+        "category": "Project Category",
+        "github_url": "https://github.com/your-repo",
+        "demo_url": "https://your-demo.com"
+    },
+    # Add more projects...
+]
+```
+
+### Updating Skills
+
+Modify the `skills_categories` dictionary in `create_skills_page()`:
+
+```python
+"Your Category": [
+    ("Skill Name", proficiency_percentage),
+    # Add more skills...
+]
+```
+
+### Customizing Styling
+
+Update CSS variables in `app/ui/components.py`:
+
+```css
+:root {
+    --primary-color: #your-color;
+    --secondary-color: #your-color;
+    /* Customize other colors... */
+}
+```
+
+## 🔌 API Endpoints
+
+The application provides several API endpoints:
+
+- `GET /api/v1/health` - Health check
+- `POST /api/v1/contact` - Contact form submission
+- `GET /api/v1/projects` - Get all projects
+- `GET /api/v1/skills` - Get all skills
+- `POST /api/v1/ai/text-generation` - AI text generation demo
+- `POST /api/v1/ai/chat` - AI chat demo
+
+## 🚀 Deployment
+
+### Docker Deployment
+
+```bash
+# Build Docker image
+docker build -t genai-portfolio .
+
+# Run container
+docker run -p 8080:8080 --env-file .env genai-portfolio
+```
+
+### Cloud Deployment
+
+The application is ready for deployment on:
+
+- **Heroku**: Use the included `Procfile`
+- **AWS**: Deploy with Elastic Beanstalk or ECS
+- **Google Cloud**: Use Cloud Run or App Engine
+- **DigitalOcean**: Deploy with App Platform
+
+### Environment-Specific Settings
+
+For production deployment:
+
+1. Set `DEBUG=false`
+2. Use a strong `SECRET_KEY`
+3. Configure proper database (PostgreSQL recommended)
+4. Set up email service for contact form
+5. Configure domain and SSL certificates
+
+## 🔒 Security Considerations
+
+- **Environment Variables**: Never commit `.env` files to version control
+- **Secret Key**: Use a cryptographically secure random key in production
+- **CORS**: Configure appropriate CORS origins for your domain
+- **Rate Limiting**: Implement rate limiting for API endpoints
+- **Input Validation**: All user inputs are validated using Pydantic models
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Dependency Conflicts**: Ensure you're using the exact versions in `requirements.txt`
+2. **Port Already in Use**: Change the `PORT` in `.env` or stop other services
+3. **Permission Errors**: Ensure write permissions for `data/`, `logs/`, and `uploads/` directories
+4. **Import Errors**: Verify virtual environment is activated and dependencies are installed
+
+### Dependency Resolution
+
+If you encounter the FastAPI/NiceGUI version conflict:
+
+```bash
+# Uninstall conflicting packages
+pip uninstall fastapi nicegui
+
+# Install compatible versions
+pip install fastapi==0.109.2 nicegui==1.4.21
+
+# Install remaining dependencies
+pip install -r requirements.txt
+```
+
+### Logs and Debugging
+
+- Check application logs in `logs/portfolio.log`
+- Enable debug mode: `DEBUG=true` in `.env`
+- Use browser developer tools for frontend issues
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📞 Support
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+For support and questions:
 
-## 🙋‍♂️ Support
-
-For questions or support:
 - **Email**: contact@genai-engineer.com
-- **GitHub Issues**: Create an issue in this repository
-- **LinkedIn**: Connect with me for professional inquiries
+- **GitHub Issues**: [Create an issue](https://github.com/genai-engineer/portfolio/issues)
+- **Documentation**: Check this README and code comments
 
-## 🌟 Acknowledgments
+## 🙏 Acknowledgments
 
-- **NiceGUI**: For the excellent Python web framework
-- **FastAPI**: For the high-performance API framework
+- **NiceGUI**: For the excellent Python-based UI framework
+- **FastAPI**: For the high-performance web framework
+- **OpenAI**: For AI capabilities and API access
 - **Tailwind CSS**: For the utility-first CSS framework
-- **OpenAI**: For AI model APIs
 
 ---
 
-**Built with ❤️ by a GenAI Engineer**
+**Built with ❤️ by GenAI Engineer**
 
-*Showcasing the power of AI in web development*
+*Transforming businesses with cutting-edge Generative AI solutions*
