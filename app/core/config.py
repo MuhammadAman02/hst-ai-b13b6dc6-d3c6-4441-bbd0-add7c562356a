@@ -1,69 +1,52 @@
-import os
-from typing import Any, Dict, List, Optional, Union
-from pathlib import Path
-from pydantic import AnyHttpUrl, field_validator, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+"""Application configuration using Pydantic settings."""
+
+from pydantic_settings import BaseSettings
+from pydantic import Field, ConfigDict
+from typing import List
 
 class Settings(BaseSettings):
-    # Core Application Settings
-    APP_NAME: str = "ProjectBase"
-    APP_DESCRIPTION: str = "A modular Python web application template"
-    APP_VERSION: str = "0.1.0"
-    DEBUG: bool = False # Set to True for development, False for production
-
-    # Server Settings
-    HOST: str = "0.0.0.0" # Use 0.0.0.0 for Docker/production
-    PORT: int = 8000
-    API_PREFIX: str = "/api"
-    NICEGUI_MOUNT_PATH: str = "/" # Path where NiceGUI will be mounted
-
-    # CORS Settings
-    # Comma-separated list of origins, e.g.: http://localhost:3000,https://example.com
-    CORS_ORIGINS: str = ""
-    CORS_ORIGINS_LIST: List[str] = []
-
-    # Security Settings (for authentication/authorization)
-    ENABLE_AUTH: bool = False # Feature flag to enable/disable authentication
-    SECRET_KEY: str = "your_super_secret_key_replace_me" # Generate a strong key
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-
-    # Database Settings (for SQLAlchemy/ORM)
-    ENABLE_DATABASE: bool = False # Feature flag to enable/disable database
-    DATABASE_URL: Optional[str] = None # e.g., "sqlite:///./test.db" or "postgresql://user:pass@host/db"
-
-    # Static Files and Templates
-    STATIC_DIR: Path = Path("app/static")
-    TEMPLATES_DIR: Path = Path("app/templates")
-
-    # Logging Settings
-    LOG_LEVEL: str = "INFO" # DEBUG, INFO, WARNING, ERROR, CRITICAL
-    LOG_TO_FILE: bool = False
-    LOG_FILE: str = "logs/app.log"
-    LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-
-    class Config:
-        case_sensitive = True
-        env_file = ".env"
-        env_file_encoding = 'utf-8'
-
-
-
+    """Application settings with environment variable support."""
+    
+    model_config = ConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore"
+    )
+    
+    # Application
+    APP_NAME: str = Field(default="GenAI Engineer Portfolio")
+    APP_DESCRIPTION: str = Field(default="Professional portfolio showcasing Generative AI expertise")
+    APP_VERSION: str = Field(default="1.0.0")
+    DEBUG: bool = Field(default=False)
+    
+    # Server
+    HOST: str = Field(default="0.0.0.0")
+    PORT: int = Field(default=8080)
+    
+    # Security
+    SECRET_KEY: str = Field(default="your-secret-key-change-in-production")
+    
+    # AI Services
+    OPENAI_API_KEY: str = Field(default="")
+    HUGGINGFACE_API_KEY: str = Field(default="")
+    
+    # Contact
+    CONTACT_EMAIL: str = Field(default="contact@genai-engineer.com")
+    SMTP_SERVER: str = Field(default="")
+    SMTP_PORT: int = Field(default=587)
+    SMTP_USERNAME: str = Field(default="")
+    SMTP_PASSWORD: str = Field(default="")
+    
+    # Social Links
+    GITHUB_URL: str = Field(default="https://github.com/genai-engineer")
+    LINKEDIN_URL: str = Field(default="https://linkedin.com/in/genai-engineer")
+    TWITTER_URL: str = Field(default="https://twitter.com/genai_engineer")
+    
+    # Portfolio Data
+    ENGINEER_NAME: str = Field(default="Alex Chen")
+    ENGINEER_TITLE: str = Field(default="Senior GenAI Engineer")
+    ENGINEER_LOCATION: str = Field(default="San Francisco, CA")
+    YEARS_EXPERIENCE: int = Field(default=5)
 
 settings = Settings()
-
-# Manually parse CORS_ORIGINS after settings are loaded
-if settings.CORS_ORIGINS.lower() == "*":
-    settings.CORS_ORIGINS_LIST = ["*"]
-else:
-    settings.CORS_ORIGINS_LIST = [i.strip() for i in settings.CORS_ORIGINS.split(",") if i.strip()]
-
-# Helper function to get settings as a dictionary
-def get_settings_dict() -> Dict[str, Any]:
-    """Return settings as a dictionary for easy access."""
-    return settings.model_dump()
-
-# Helper function to get a specific setting
-def get_setting(key: str, default: Any = None) -> Any:
-    """Get a specific setting by key with an optional default value."""
-    return getattr(settings, key, default)
